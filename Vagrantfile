@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
         end
     end
 
-    config.vm.define "web" do |web|
+    config.vm.define "web", primary: true do |web|
         web.vm.provider "docker" do |d|
         d.build_dir = "."
         d.name = "web"
