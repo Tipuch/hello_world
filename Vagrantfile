@@ -22,6 +22,19 @@ Vagrant.configure("2") do |config|
     # define custom network here so container can resolve each other through their names
     config.vm.network :private_network, type: "dhcp"
 
+    config.vm.define "db" do |db|
+        db.vm.provider "docker" do |d|
+            d.image = "postgres:latest"
+            d.name = "db"
+            d.ports = ['5432:5432']
+            d.env = {
+                POSTGRES_USER: POSTGRES_USER,
+                POSTGRES_DB: POSTGRES_DB,
+                POSTGRES_PASSWORD: POSTGRES_PASSWORD
+            }
+        end
+    end
+
     config.vm.define "web" do |web|
         web.vm.provider "docker" do |d|
         d.build_dir = "."
@@ -33,19 +46,6 @@ Vagrant.configure("2") do |config|
             POSTGRES_PASSWORD: POSTGRES_PASSWORD,
             DB_HOST: DB_HOST
         }
-        end
-    end
-
-    config.vm.define "db" do |db|
-        db.vm.provider "docker" do |d|
-            d.image = "postgres:latest"
-            d.name = "db"
-            d.ports = ['5432:5432']
-            d.env = {
-                POSTGRES_USER: POSTGRES_USER,
-                POSTGRES_DB: POSTGRES_DB,
-                POSTGRES_PASSWORD: POSTGRES_PASSWORD
-            }
         end
     end
 
