@@ -32,20 +32,22 @@ Vagrant.configure("2") do |config|
                 POSTGRES_DB: POSTGRES_DB,
                 POSTGRES_PASSWORD: POSTGRES_PASSWORD
             }
+            d.create_args = ["-v", "data:/var/lib/postgresql/data"]
         end
     end
 
     config.vm.define "web", primary: true do |web|
         web.vm.provider "docker" do |d|
-        d.build_dir = "."
-        d.name = "web"
-        d.ports = ['8000:8000']
-        d.env = {
-            POSTGRES_USER: POSTGRES_USER,
-            POSTGRES_DB: POSTGRES_DB,
-            POSTGRES_PASSWORD: POSTGRES_PASSWORD,
-            DB_HOST: DB_HOST
-        }
+            d.build_dir = "."
+            d.name = "web"
+            d.ports = ['8000:8000']
+            d.env = {
+                POSTGRES_USER: POSTGRES_USER,
+                POSTGRES_DB: POSTGRES_DB,
+                POSTGRES_PASSWORD: POSTGRES_PASSWORD,
+                DB_HOST: DB_HOST
+            }
+            d.link("db:db")
         end
     end
 
